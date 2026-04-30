@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:my_core_package/my_core_package.dart';
 
@@ -16,20 +14,19 @@ class PostTeGeneraService {
   }) async {
     await _apiClient.ensureInitialized();
 
-    final url = "${_apiClient.baseUrl}${TransfersEndpoints.postTEGenera}";
-    debugPrint("🌐 POST TE GENERA -> $url (id_dotes=$idDotes)");
+    final url = '${_apiClient.baseUrl}${TransfersEndpoints.postTEGenera}';
+    debugPrint('🌐 POST TE GENERA -> $url (id_dotes=$idDotes)');
 
     final payload = {
-      "parameters": {
-        "cd_mg": cdMg.trim(),
-        "id_dotes": idDotes,
+      'parameters': {
+        'cd_mg': cdMg.trim(),
+        'id_dotes': idDotes,
       }
     };
 
-    try {
+    return apiCall(() async {
       final response = await _apiClient.post(url, body: payload);
-
-      debugPrint("📥 TeGenera response body: ${response.body}");
+      debugPrint('📥 TeGenera response body: ${response.body}');
 
       final data = ApiJson.decodeMapResponse(
         url: url,
@@ -39,9 +36,9 @@ class PostTeGeneraService {
       );
 
       if (data['success'] == false) {
-        final msg =
-            data['error']?['Message']?.toString() ?? "Errore sconosciuto dal server";
-        throw ApiException("Richiesta fallita: $msg");
+        final msg = data['error']?['Message']?.toString() ??
+            'Errore sconosciuto dal server';
+        throw ApiException('Richiesta fallita: $msg');
       }
 
       final rows = ApiJson.extractRowsOrThrow(data, noDataIsEmptyList: false);
@@ -49,21 +46,12 @@ class PostTeGeneraService {
       final idLog = (row['id_xlogEvadiDocument'] as num?)?.toInt();
 
       if (idLog == null) {
-        throw const ApiException("id_xlogEvadiDocument mancante nella risposta");
+        throw const ApiException(
+            'id_xlogEvadiDocument mancante nella risposta');
       }
 
-      debugPrint("✅ TeGenera OK: id_xlogEvadiDocument=$idLog");
+      debugPrint('✅ TeGenera OK: id_xlogEvadiDocument=$idLog');
       return idLog;
-    } on SocketException {
-      throw const ApiException(
-        "Connessione di rete assente. Controlla la connessione internet.",
-      );
-    } on HttpException catch (e) {
-      throw ApiException("Errore HTTP: ${e.message}");
-    } on FormatException catch (e) {
-      throw ApiException("Errore di formato: ${e.message}");
-    } catch (e) {
-      throw ApiException("Errore imprevisto durante teGenera: $e");
-    }
+    }, context: 'teGenera');
   }
 }
