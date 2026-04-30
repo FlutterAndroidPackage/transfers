@@ -9,15 +9,28 @@ import '../services/get_te_check_service.dart';
 
 class TEPage extends StatefulWidget {
   final String destinazione;
+  final Future<String> Function() getAccessToken;
+  final String Function() getBaseUrl;
+  final void Function()? onUnauthorized;
+  final Future<bool> Function()? tryRefreshToken;
 
-  const TEPage({super.key, required this.destinazione});
+  const TEPage({
+    super.key,
+    required this.destinazione,
+    required this.getAccessToken,
+    required this.getBaseUrl,
+    this.onUnauthorized,
+    this.tryRefreshToken,
+  });
 
   @override
   State<TEPage> createState() => _TEPageState();
 }
 
 class _TEPageState extends State<TEPage> {
-  final GetTeService _service = GetTeService();
+  late final GetTeService _service;
+  late final PostTeGeneraService _postService;
+  late final GetTeCheckService _checkService;
   final ScrollController _scrollController = ScrollController();
 
   List<TeItem> _rows = [];
@@ -32,6 +45,15 @@ class _TEPageState extends State<TEPage> {
   @override
   void initState() {
     super.initState();
+    final client = CoreHttpClient(
+      getAccessToken: widget.getAccessToken,
+      getBaseUrl: widget.getBaseUrl,
+      onUnauthorized: widget.onUnauthorized,
+      tryRefreshToken: widget.tryRefreshToken,
+    );
+    _service = GetTeService(client);
+    _postService = PostTeGeneraService(client);
+    _checkService = GetTeCheckService(client);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
     });
@@ -74,8 +96,6 @@ class _TEPageState extends State<TEPage> {
       _buttonLabel = "Invio in corso...";
     });
 
-    final postSvc = PostTeGeneraService();
-    final checkSvc = GetTeCheckService();
     final total = _rows.length;
 
     try {
@@ -85,7 +105,7 @@ class _TEPageState extends State<TEPage> {
 
         // POST teGenera per questo documento
         setState(() => _buttonLabel = "Generazione TE in corso...");
-        final idLog = await postSvc.postTeGenera(
+        final idLog = await _postService.postTeGenera(
           cdMg: _cdMg,
           idDotes: item.idDotes,
         );
@@ -94,7 +114,7 @@ class _TEPageState extends State<TEPage> {
 
         // Polling TEcheck per questo documento
         setState(() => _buttonLabel = "Generazione TE in corso...");
-        final ok = await _pollTeCheck(checkSvc, idLog);
+        final ok = await _pollTeCheck(idLog);
 
         if (!mounted) return;
 
@@ -126,7 +146,7 @@ class _TEPageState extends State<TEPage> {
 
   /// Polling su TEcheck ogni 500ms per max 30s.
   /// Ritorna true se generat == 0 (elaborazione completata), false se timeout.
-  Future<bool> _pollTeCheck(GetTeCheckService checkSvc, int idLog) async {
+  Future<bool> _pollTeCheck(int idLog) async {
     final deadline = DateTime.now().add(const Duration(seconds: 30));
 
     while (DateTime.now().isBefore(deadline)) {
@@ -134,7 +154,7 @@ class _TEPageState extends State<TEPage> {
       if (!mounted) return false;
 
       try {
-        final generat = await checkSvc.getTeCheck(idXlogEvadiDocument: idLog);
+        final generat = await _checkService.getTeCheck(idXlogEvadiDocument: idLog);
         debugPrint("🔄 TEcheck generat: $generat (id=$idLog)");
         if (generat == 0) return true;
       } catch (e) {

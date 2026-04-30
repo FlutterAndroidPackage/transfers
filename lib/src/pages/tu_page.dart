@@ -9,15 +9,28 @@ import '../services/get_tu_check_service.dart';
 
 class TUPage extends StatefulWidget {
   final String destinazione;
+  final Future<String> Function() getAccessToken;
+  final String Function() getBaseUrl;
+  final void Function()? onUnauthorized;
+  final Future<bool> Function()? tryRefreshToken;
 
-  const TUPage({super.key, required this.destinazione});
+  const TUPage({
+    super.key,
+    required this.destinazione,
+    required this.getAccessToken,
+    required this.getBaseUrl,
+    this.onUnauthorized,
+    this.tryRefreshToken,
+  });
 
   @override
   State<TUPage> createState() => _TUPageState();
 }
 
 class _TUPageState extends State<TUPage> {
-  final GetTuToTrasfService _service = GetTuToTrasfService();
+  late final GetTuToTrasfService _service;
+  late final PostTuBatchService _postService;
+  late final GetTuCheckService _checkService;
   final ScrollController _scrollController = ScrollController();
 
   List<TuToTrasf> _rows = [];
@@ -32,6 +45,15 @@ class _TUPageState extends State<TUPage> {
   @override
   void initState() {
     super.initState();
+    final client = CoreHttpClient(
+      getAccessToken: widget.getAccessToken,
+      getBaseUrl: widget.getBaseUrl,
+      onUnauthorized: widget.onUnauthorized,
+      tryRefreshToken: widget.tryRefreshToken,
+    );
+    _service = GetTuToTrasfService(client);
+    _postService = PostTuBatchService(client);
+    _checkService = GetTuCheckService(client);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
     });
@@ -52,8 +74,7 @@ class _TUPageState extends State<TUPage> {
     });
 
     try {
-      final svc = PostTuBatchService();
-      final result = await svc.postTuBatch(righe: _rows);
+      final result = await _postService.postTuBatch(righe: _rows);
 
       if (!mounted) return;
 
@@ -80,7 +101,6 @@ class _TUPageState extends State<TUPage> {
   }
 
   Future<void> _pollTuCheck(String xTUTesta) async {
-    final checkSvc = GetTuCheckService();
     final deadline = DateTime.now().add(const Duration(seconds: 30));
 
     while (DateTime.now().isBefore(deadline)) {
@@ -88,7 +108,7 @@ class _TUPageState extends State<TUPage> {
       if (!mounted) return;
 
       try {
-        final residui = await checkSvc.getTuCheck(xTuTesta: xTUTesta);
+        final residui = await _checkService.getTuCheck(xTuTesta: xTUTesta);
         debugPrint("🔄 TuCheck nResidui: $residui");
 
         if (residui == 0) {

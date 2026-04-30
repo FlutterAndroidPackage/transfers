@@ -1,16 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:my_core_package/my_core_package.dart';
 
-import '../constants/transfers_endpoints.dart';
+import '../constants/endpoints.dart';
 import '../models/te_item.dart';
 
 class GetTeService {
-  final ApiClient _apiClient = ApiClient();
+  final CoreHttpClient _client;
+  GetTeService(this._client);
 
   Future<List<TeItem>> getTE(String cdMg) async {
-    await _apiClient.ensureInitialized();
-
-    final uri = _apiClient.buildUri(
+    final uri = _client.buildUri(
       TransfersEndpoints.getTE,
       queryParameters: {'cd_mg': cdMg.trim()},
     );
@@ -18,7 +17,7 @@ class GetTeService {
     debugPrint('🌐 GET TE -> $url');
 
     return apiCall(() async {
-      final response = await _apiClient.get(url);
+      final response = await _client.get(url);
 
       final data = ApiJson.decodeMapResponse(
         url: url,

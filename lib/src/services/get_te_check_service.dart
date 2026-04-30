@@ -1,17 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:my_core_package/my_core_package.dart';
 
-import '../constants/transfers_endpoints.dart';
+import '../constants/endpoints.dart';
 
 class GetTeCheckService {
-  final ApiClient _apiClient = ApiClient();
+  final CoreHttpClient _client;
+  GetTeCheckService(this._client);
 
   /// Ritorna il conteggio di record non ancora elaborati per [idXlogEvadiDocument].
   /// Ritorna 0 quando il documento è stato processato con successo.
   Future<int> getTeCheck({required int idXlogEvadiDocument}) async {
-    await _apiClient.ensureInitialized();
-
-    final uri = _apiClient.buildUri(
+    final uri = _client.buildUri(
       TransfersEndpoints.teCheck,
       queryParameters: {
         'id_xlogEvadiDocument': idXlogEvadiDocument.toString(),
@@ -21,7 +20,7 @@ class GetTeCheckService {
     debugPrint('🌐 GET TE CHECK -> $url');
 
     return apiCall(() async {
-      final response = await _apiClient.get(url);
+      final response = await _client.get(url);
 
       final data = ApiJson.decodeMapResponse(
         url: url,

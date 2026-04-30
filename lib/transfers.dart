@@ -27,4 +27,4 @@ export 'src/services/post_te_genera_service.dart';
 export 'src/services/get_te_check_service.dart';
 
 // Constants
-export 'src/constants/transfers_endpoints.dart';
+export 'src/constants/endpoints.dart';

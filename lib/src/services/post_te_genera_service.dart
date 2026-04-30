@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:my_core_package/my_core_package.dart';
 
-import '../constants/transfers_endpoints.dart';
+import '../constants/endpoints.dart';
 
 class PostTeGeneraService {
-  final ApiClient _apiClient = ApiClient();
+  final CoreHttpClient _client;
+  PostTeGeneraService(this._client);
 
   /// Inserisce una riga in xLogEvadiDocument per [idDotes] e ritorna
   /// l'id del log appena creato (SCOPE_IDENTITY).
@@ -12,9 +13,7 @@ class PostTeGeneraService {
     required String cdMg,
     required int idDotes,
   }) async {
-    await _apiClient.ensureInitialized();
-
-    final url = '${_apiClient.baseUrl}${TransfersEndpoints.postTEGenera}';
+    final url = _client.buildUri(TransfersEndpoints.postTEGenera).toString();
     debugPrint('🌐 POST TE GENERA -> $url (id_dotes=$idDotes)');
 
     final payload = {
@@ -25,7 +24,7 @@ class PostTeGeneraService {
     };
 
     return apiCall(() async {
-      final response = await _apiClient.post(url, body: payload);
+      final response = await _client.post(url, body: payload);
       debugPrint('📥 TeGenera response body: ${response.body}');
 
       final data = ApiJson.decodeMapResponse(
@@ -34,12 +33,6 @@ class PostTeGeneraService {
         body: response.body,
         reasonPhrase: response.reasonPhrase,
       );
-
-      if (data['success'] == false) {
-        final msg = data['error']?['Message']?.toString() ??
-            'Errore sconosciuto dal server';
-        throw ApiException('Richiesta fallita: $msg');
-      }
 
       final rows = ApiJson.extractRowsOrThrow(data, noDataIsEmptyList: false);
       final row = rows.first as Map<String, dynamic>;

@@ -1,17 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:my_core_package/my_core_package.dart';
 
-import '../constants/transfers_endpoints.dart';
+import '../constants/endpoints.dart';
 
 class GetTuCheckService {
-  final ApiClient _apiClient = ApiClient();
+  final CoreHttpClient _client;
+  GetTuCheckService(this._client);
 
   /// Ritorna il numero di record non ancora processati per [xTuTesta].
   /// Ritorna 0 quando tutti i record sono stati elaborati.
   Future<int> getTuCheck({required String xTuTesta}) async {
-    await _apiClient.ensureInitialized();
-
-    final uri = _apiClient.buildUri(
+    final uri = _client.buildUri(
       TransfersEndpoints.tuCheck,
       queryParameters: {'xTuTesta': xTuTesta.trim()},
     );
@@ -19,7 +18,7 @@ class GetTuCheckService {
     debugPrint('🌐 GET TU CHECK -> $url');
 
     return apiCall(() async {
-      final response = await _apiClient.get(url);
+      final response = await _client.get(url);
 
       final data = ApiJson.decodeMapResponse(
         url: url,

@@ -4,8 +4,29 @@ import 'package:my_core_package/my_core_package.dart';
 import 'tu_page.dart';
 import 'te_page.dart';
 
+/// Pagina hub per la gestione dei trasferimenti magazzino (TU/TE).
+///
+/// ### Parametri obbligatori
+/// - [getAccessToken]: ritorna il token JWT corrente
+/// - [getBaseUrl]: ritorna il base URL del server
+///
+/// ### Parametri opzionali
+/// - [onUnauthorized]: callback su 401 non recuperabile
+/// - [tryRefreshToken]: tenta il refresh del token su 401; se ritorna true
+///   la richiesta viene ripetuta automaticamente una sola volta
 class TrasferimentiPage extends StatelessWidget {
-  const TrasferimentiPage({super.key});
+  final Future<String> Function() getAccessToken;
+  final String Function() getBaseUrl;
+  final void Function()? onUnauthorized;
+  final Future<bool> Function()? tryRefreshToken;
+
+  const TrasferimentiPage({
+    super.key,
+    required this.getAccessToken,
+    required this.getBaseUrl,
+    this.onUnauthorized,
+    this.tryRefreshToken,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +66,13 @@ class TrasferimentiPage extends StatelessWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const TUPage(destinazione: "Maiocca"),
+                    builder: (_) => TUPage(
+                      destinazione: "Maiocca",
+                      getAccessToken: getAccessToken,
+                      getBaseUrl: getBaseUrl,
+                      onUnauthorized: onUnauthorized,
+                      tryRefreshToken: tryRefreshToken,
+                    ),
                   ),
                 ),
               ),
@@ -57,7 +84,13 @@ class TrasferimentiPage extends StatelessWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const TUPage(destinazione: "Terranova"),
+                    builder: (_) => TUPage(
+                      destinazione: "Terranova",
+                      getAccessToken: getAccessToken,
+                      getBaseUrl: getBaseUrl,
+                      onUnauthorized: onUnauthorized,
+                      tryRefreshToken: tryRefreshToken,
+                    ),
                   ),
                 ),
               ),
@@ -80,7 +113,13 @@ class TrasferimentiPage extends StatelessWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const TEPage(destinazione: "Maiocca"),
+                    builder: (_) => TEPage(
+                      destinazione: "Maiocca",
+                      getAccessToken: getAccessToken,
+                      getBaseUrl: getBaseUrl,
+                      onUnauthorized: onUnauthorized,
+                      tryRefreshToken: tryRefreshToken,
+                    ),
                   ),
                 ),
               ),
@@ -92,7 +131,13 @@ class TrasferimentiPage extends StatelessWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const TEPage(destinazione: "Terranova"),
+                    builder: (_) => TEPage(
+                      destinazione: "Terranova",
+                      getAccessToken: getAccessToken,
+                      getBaseUrl: getBaseUrl,
+                      onUnauthorized: onUnauthorized,
+                      tryRefreshToken: tryRefreshToken,
+                    ),
                   ),
                 ),
               ),

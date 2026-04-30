@@ -1,18 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:my_core_package/my_core_package.dart';
 
-import '../constants/transfers_endpoints.dart';
+import '../constants/endpoints.dart';
 import '../models/tu_to_trasf.dart';
 
 class GetTuToTrasfService {
-  final ApiClient _apiClient = ApiClient();
+  final CoreHttpClient _client;
+  GetTuToTrasfService(this._client);
 
   Future<List<TuToTrasf>> _fetchTuToTrasf(Uri uri) {
     final url = uri.toString();
     debugPrint('🌐 GET TUTOTRASF -> $url');
 
     return apiCall(() async {
-      final response = await _apiClient.get(url);
+      final response = await _client.get(url);
 
       final data = ApiJson.decodeMapResponse(
         url: url,
@@ -33,9 +34,7 @@ class GetTuToTrasfService {
 
   /// Recupera i movimenti da trasferire per il magazzino [codiceMagazzino].
   Future<List<TuToTrasf>> getTuToTrasfByMg(String codiceMagazzino) async {
-    await _apiClient.ensureInitialized();
-
-    final uri = _apiClient.buildUri(
+    final uri = _client.buildUri(
       TransfersEndpoints.getTUtoTrasfByCd_Mg,
       queryParameters: {'cd_mg': codiceMagazzino.trim()},
     );
