@@ -1,6 +1,6 @@
 name: transfers
 description: "Flutter package per la gestione dei trasferimenti magazzino (TU/TE)."
-version: 1.0.10
+version: 1.0.11
 publish_to: 'none'
 
 environment:
@@ -11,9 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   my_core_package:
-    git:
-      url: https://github.com/FlutterAndroidPackage/my_core_package.git
-      ref: main
+      path: C:\Lavoro\CLIENTI\CFA\FLUTTER_PACKAGE\ANDROID\my_core_package
 
 dev_dependencies:
   flutter_test:
