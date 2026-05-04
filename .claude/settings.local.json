@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(chmod +x:*)"
+      "Bash(chmod +x:*)",
+      "Bash(do:*)",
+      "Bash(git push:*)",
+      "Bash(xargs cat:*)",
+      "Bash(git:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(xargs grep -l \"check_inventory\\\\|transfers\\\\|change_location\\\\|my_core_package\")",
+      "Bash(gh api:*)"
     ]
   }
 }
