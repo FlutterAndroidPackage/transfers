@@ -232,7 +232,7 @@ class _TUPageState extends State<TUPage> {
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: scheme.onPrimary.withOpacity(0.7),
+                          color: scheme.onPrimary.withValues(alpha: 0.7),
                         ),
                       ),
                       const SizedBox(width: 10),

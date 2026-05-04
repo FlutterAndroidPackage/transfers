@@ -2,6 +2,7 @@
 ///
 /// Esporta le pagine, widget, modelli, servizi e costanti necessari
 /// per la gestione dei trasferimenti di uscita (TU) e rientro (TE).
+library;
 
 // Pages
 export 'src/pages/trasferimenti_page.dart';
