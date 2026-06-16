@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   my_core_package:
-      path: C:\Lavoro\CLIENTI\CFA\FLUTTER_PACKAGE\ANDROID\my_core_package
+      path: ../my_core_package
 
 dev_dependencies:
   flutter_test:

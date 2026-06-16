@@ -29,3 +29,6 @@ export 'src/services/get_te_check_service.dart';
 
 // Constants
 export 'src/constants/endpoints.dart';
+
+// Version
+export 'src/package_version.dart';

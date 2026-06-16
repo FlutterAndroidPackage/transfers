@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# pre-push hook — Auto-incrementa la versione prima di ogni push su main.
+# Installazione: ./scripts/install-hooks.sh
+set -euo pipefail
+
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+[[ "$current_branch" != "main" ]] && exit 0
+
+if ! git diff --quiet || ! git diff --cached --quiet; then
+    exit 0
+fi
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+last_msg=$(git log -1 --format="%s")
+if [[ "$last_msg" == "chore: release v"* ]]; then
+    exit 0
+fi
+
+if ! "$REPO_ROOT/scripts/release.sh"; then
+    echo "[pre-push] release.sh fallito. Push interrotto." >&2
+    exit 1
+fi
+
+exit 0
