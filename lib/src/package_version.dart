@@ -1,2 +1,2 @@
-// AUTO-GENERATED — do not edit manually. Update when releasing a new version.
-const String kTransfersVersion = '1.0.11';
+// AUTO-GENERATED — do not edit manually. Run scripts/release.sh to update.
+const String kTransfersVersion = '1.0.12';

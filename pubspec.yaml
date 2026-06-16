@@ -1,6 +1,6 @@
 name: transfers
 description: "Flutter package per la gestione dei trasferimenti magazzino (TU/TE)."
-version: 1.0.11
+version: 1.0.12
 publish_to: 'none'
 
 environment:
