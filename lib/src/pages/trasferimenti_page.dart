@@ -39,111 +39,129 @@ class TrasferimentiPage extends StatelessWidget {
       color: scheme.onSurfaceVariant,
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Trasferimenti"),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Uscita materiale",
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: scheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: 10),
-
-              HomeActionCard(
-                icon: Text("M", style: labelStyle),
-                title: "Uscita da Maiocca",
-                subtitle: "Genera bolla uscita Maiocca",
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => TUPage(
-                      destinazione: "Maiocca",
-                      getAccessToken: getAccessToken,
-                      getBaseUrl: getBaseUrl,
-                      onUnauthorized: onUnauthorized,
-                      tryRefreshToken: tryRefreshToken,
-                    ),
+    return ChangelogGate(
+      packageName: 'transfers',
+      packageTitle: 'Trasferimenti',
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Trasferimenti"),
+          centerTitle: true,
+          actions: const [
+            ChangelogButton(
+              packageName: 'transfers',
+              packageTitle: 'Trasferimenti',
+            ),
+          ],
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Uscita materiale",
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: scheme.onSurfaceVariant,
                   ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              HomeActionCard(
-                icon: Text("T", style: labelStyle),
-                title: "Uscita da Terranova",
-                subtitle: "Genera bolla uscita Terranova",
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => TUPage(
-                      destinazione: "Terranova",
-                      getAccessToken: getAccessToken,
-                      getBaseUrl: getBaseUrl,
-                      onUnauthorized: onUnauthorized,
-                      tryRefreshToken: tryRefreshToken,
-                    ),
+                const SizedBox(height: 10),
+
+                HomeActionCard(
+                  icon: Text("M", style: labelStyle),
+                  title: "Uscita da Maiocca",
+                  subtitle: "Genera bolla uscita Maiocca",
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (_) => TUPage(
+                                destinazione: "Maiocca",
+                                getAccessToken: getAccessToken,
+                                getBaseUrl: getBaseUrl,
+                                onUnauthorized: onUnauthorized,
+                                tryRefreshToken: tryRefreshToken,
+                              ),
+                        ),
+                      ),
+                ),
+                const SizedBox(height: 12),
+                HomeActionCard(
+                  icon: Text("T", style: labelStyle),
+                  title: "Uscita da Terranova",
+                  subtitle: "Genera bolla uscita Terranova",
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (_) => TUPage(
+                                destinazione: "Terranova",
+                                getAccessToken: getAccessToken,
+                                getBaseUrl: getBaseUrl,
+                                onUnauthorized: onUnauthorized,
+                                tryRefreshToken: tryRefreshToken,
+                              ),
+                        ),
+                      ),
+                ),
+
+                const SizedBox(height: 24),
+
+                Text(
+                  "Rientro materiale",
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: scheme.onSurfaceVariant,
                   ),
                 ),
-              ),
+                const SizedBox(height: 10),
 
-              const SizedBox(height: 24),
-
-              Text(
-                "Rientro materiale",
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: scheme.onSurfaceVariant,
+                HomeActionCard(
+                  icon: Text("M", style: labelStyle),
+                  title: "Rientro a Maiocca",
+                  subtitle: "Conferma rientro da Maiocca",
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (_) => TEPage(
+                                destinazione: "Maiocca",
+                                getAccessToken: getAccessToken,
+                                getBaseUrl: getBaseUrl,
+                                onUnauthorized: onUnauthorized,
+                                tryRefreshToken: tryRefreshToken,
+                              ),
+                        ),
+                      ),
                 ),
-              ),
-              const SizedBox(height: 10),
-
-              HomeActionCard(
-                icon: Text("M", style: labelStyle),
-                title: "Rientro a Maiocca",
-                subtitle: "Conferma rientro da Maiocca",
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => TEPage(
-                      destinazione: "Maiocca",
-                      getAccessToken: getAccessToken,
-                      getBaseUrl: getBaseUrl,
-                      onUnauthorized: onUnauthorized,
-                      tryRefreshToken: tryRefreshToken,
-                    ),
-                  ),
+                const SizedBox(height: 12),
+                HomeActionCard(
+                  icon: Text("T", style: labelStyle),
+                  title: "Rientro a Terranova",
+                  subtitle: "Conferma rientro da Terranova",
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (_) => TEPage(
+                                destinazione: "Terranova",
+                                getAccessToken: getAccessToken,
+                                getBaseUrl: getBaseUrl,
+                                onUnauthorized: onUnauthorized,
+                                tryRefreshToken: tryRefreshToken,
+                              ),
+                        ),
+                      ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              HomeActionCard(
-                icon: Text("T", style: labelStyle),
-                title: "Rientro a Terranova",
-                subtitle: "Conferma rientro da Terranova",
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => TEPage(
-                      destinazione: "Terranova",
-                      getAccessToken: getAccessToken,
-                      getBaseUrl: getBaseUrl,
-                      onUnauthorized: onUnauthorized,
-                      tryRefreshToken: tryRefreshToken,
-                    ),
-                  ),
-                ),
-              ),
 
-              const Spacer(),
-            ],
+                const Spacer(),
+              ],
+            ),
           ),
         ),
       ),
