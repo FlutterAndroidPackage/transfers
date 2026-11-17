@@ -1,14 +1,26 @@
 {
   "permissions": {
     "allow": [
-      "Bash(chmod +x:*)",
-      "Bash(do:*)",
-      "Bash(git push:*)",
-      "Bash(xargs cat:*)",
-      "Bash(git:*)",
-      "Bash(flutter analyze:*)",
-      "Bash(xargs grep -l \"check_inventory\\\\|transfers\\\\|change_location\\\\|my_core_package\")",
-      "Bash(gh api:*)"
+      "PowerShell(flutter analyze*)",
+      "PowerShell(flutter build *)"
+    ],
+    "deny": [
+      "PowerShell(*curl*)",
+      "PowerShell(*wget*)",
+      "PowerShell(*Invoke-WebRequest*)",
+      "PowerShell(*Invoke-RestMethod*)",
+      "PowerShell(*iwr *)",
+      "PowerShell(*irm *)",
+      "PowerShell(*localhost*)",
+      "PowerShell(*appsettings*)",
+      "PowerShell(*Remove-Item*)",
+      "Read(**/appsettings.json)",
+      "Read(**/appsettings.*.json)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/android/local.properties)",
+      "WebFetch(domain:localhost)",
+      "WebFetch(domain:api.tuodominio.com)"
     ]
   }
 }
